@@ -31,4 +31,4 @@ dist-ssr
 /playwright/.auth/
 
 #Files
-/./utilFiles/helpers/auth.json
+/utilFiles/helpers/auth.json
