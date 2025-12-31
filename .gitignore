@@ -32,3 +32,4 @@ dist-ssr
 
 #Files
 /utilFiles/helpers/auth.json
+tests/scrapTester.spec.ts
