@@ -26,11 +26,11 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://www.saucedemo.com/',
+    baseURL: 'https://www.demoblaze.com/index.html',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    headless: true,
+    headless: false,
   },
 
   /* Configure projects for major browsers */
@@ -43,7 +43,7 @@ export default defineConfig({
 
     {
       name: 'chromium',
-      dependencies: ['setup'],
+      dependencies: ['setup'],    //Uncomment at first run to ensure auth.json is created
       use: { ...devices['Desktop Chrome'],
         storageState: './utilFiles/helpers/auth.json'
        },

@@ -1,86 +1,90 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { productNameMapper } from "../helpers/productNameMapper";
-import { waitFor } from "../fixtures/waitFor";
 
 
 class PageLocators {
-    page: Page;
-    readonly loginBtn: Locator;
-    readonly userNameBox: Locator;
-    readonly passwordBox: Locator;
-    readonly productClass: Locator;
-    readonly backPackPrice: Locator;
-    readonly bikeLightPrice: Locator;
-    readonly tShirtPrice: Locator;
-    readonly fleeceJacketPrice: Locator;
-    readonly onesiePrice: Locator;
-    readonly redTShirtPrice: Locator;
-    readonly backPackCartAction: Locator;
-    readonly bikeLightCartAction: Locator;
-    readonly tShirtCartAction: Locator;
-    readonly fleeceJacketCartAction: Locator;
-    readonly onesieCartAction: Locator;
-    readonly redTShirtCartAction: Locator;
+    page: Page;    
+    readonly homeLink: Locator;
+    readonly contactLink: Locator;
+    readonly aboutUsLink: Locator;
+    readonly cartLink: Locator;
+    readonly loginLink: Locator;
+    readonly signUpLink: Locator;
+    readonly logoutLink: Locator;
+    readonly prevBtn: Locator;
+    readonly nextBtn: Locator;
+    readonly contactUsForm: Locator;
+    readonly aboutUsForm: Locator;
+    readonly signUpModal: Locator;
+    readonly loginModal: Locator;
+    readonly loginUsername: Locator;
+    readonly loginPassword: Locator;
+    readonly signUpUsername: Locator;
+    readonly signUpPassword: Locator;
+    readonly loginSignupBtn: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
-        this.userNameBox = page.locator('input[data-test="username"]');
-        this.passwordBox = page.locator('input[data-test="password"]');
-        this.loginBtn = page.locator('input[data-test="login-button"]');
+        this.loginUsername = page.locator(`.modal-content`).nth(1);
+        this.loginPassword = page.locator(`input[id="loginpassword"]`);
 
-        //Inventory Page Locators
-        this.productClass = page.locator(`div.inventory_list`);
+        this.signUpUsername = page.locator(`input[id="sign-username"]`);
+        this.signUpPassword = page.locator(`input[id="sign-password"]`);
 
-        this.backPackPrice = page.locator(`.inventory_item`).first();
-        this.bikeLightPrice = page.locator(`.inventory_item`).nth(1);
-        this.tShirtPrice = page.locator(`.inventory_item`).nth(2);
-        this.fleeceJacketPrice = page.locator(`.inventory_item`);
-        this.onesiePrice = page.locator(`.inventory_item`).nth(4);
-        this.redTShirtPrice = page.locator(`.inventory_item`).nth(5);
+        this.loginSignupBtn = page.locator(`div.modal-content button.btn.btn-primary`).first();
+        
 
-        this.backPackCartAction = page.locator(`.inventory_item`).first();
-        this.bikeLightCartAction = page.locator(`.inventory_item`).nth(1); 
-        this.tShirtCartAction= page.locator(`.inventory_item`).nth(2);
-        this.fleeceJacketCartAction = page.locator(`.inventory_item`).nth(3);
-        this.onesieCartAction = page.locator(`.inventory_item`).nth(4);
-        this.redTShirtCartAction= page.locator(`.inventory_item`).nth(5);
+        this.homeLink = page.locator(`.navbar-collapse [href="index.html"]`);
+        this.contactLink = page.locator(`[id="navbarExample"] li`).nth(1).locator(`a.nav-link`);
+        this.aboutUsLink = page.locator(`[id="navbarExample"] [data-target="#videoModal"]`);
+        this.cartLink = page.locator(`[id="navbarExample"] a[href="cart.html"]`);
+        this.loginLink = page.getByText('Log in');
+        this.signUpLink = page.getByText('Sign up');
+        this.logoutLink = page.getByText('Log out');
+
+        this.prevBtn = page.getByText('Previous');
+        this.nextBtn = page.getByText('Next');
+
+        this.contactUsForm = page.locator(`.modal-content`).first();
+        this.signUpModal = page.locator(`.modal-content`).nth(1);
+        this.loginModal = page.locator(`.modal-content`).nth(2);
+        this.aboutUsForm = page.locator(`.modal-content`).nth(3);
+        
     }
 
 
-
-    productCount(){
-        return this.productClass.locator('div').count();
-    }
-
-    //This fxn returns the locator for a product based on casual name. 
-    async productNameLocator(casualName: string): Promise<Locator> {
-        const productName = productNameMapper(casualName);
-        return this.page.getByText(productName);
-    }
-
-    //Add or Remove Button items via the Inventory Page
-
-    async doActionon(action:"add" | "remove", field:Locator): Promise<boolean> {
-        const actionBtn = action === "add" ? field.locator(`button.btn.btn_primary`) : field.locator(`button.btn.btn_secondary`);
-        await actionBtn.click();
-        await waitFor(2);
-        expect(actionBtn).toHaveText(action === "add" ? "Remove" : "Add to cart");  // Verify button text changes accordingly.
-        return true;
-    }
-
-    //Get Price of a product via Inventory Page
-    async getProductPrice(field:Locator): Promise<string> {
-        const fieldprice = await field.locator(`[data-test="inventory-item-price"]`).innerText();
-        expect(fieldprice).toMatch(/^\d+\.\d{2}$/);
-        return fieldprice;
-    }
-    
+    // Modal Form 
+    private readonly modalMap = { 
+        'login': () => this.loginModal,    
+        'signUp': () => this.signUpModal,
+        'contactUs': () => this.contactUsForm,
+        'aboutUs': () => this.aboutUsForm,
+    };
 
     
+    modalHeader (action:'aboutUs' | 'contactUs' | 'login' | 'signUp') {
+        const modal = this.modalMap[action]?.();
+        if (!modal) {
+            throw new Error(`Invalid action for modalHeader: ${action}`);
+        }
+        return modal.locator(`div.modal-header h5`);
+    }
 
+    modalCancelBtn (action:'aboutUs' | 'contactUs' | 'login' | 'signUp') {    //'x' button
+        const modal = this.modalMap[action]?.();
+        if (!modal) {
+            throw new Error(`Invalid action for modalCancelBtn: ${action}`);
+        }
+        return modal.locator(`button span`);
+    }
 
-
+    modalCloseBtn (action:'aboutUs' | 'contactUs'| 'login' | 'signUp') {   //'Close' button
+        const modal = this.modalMap[action]?.();
+        if (!modal) {
+            throw new Error(`Invalid action for modalCloseBtn: ${action}`);
+        }
+        return modal.getByText('Close');
+    }
 
 
 }
