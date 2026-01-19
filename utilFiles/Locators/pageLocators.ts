@@ -21,29 +21,34 @@ class PageLocators {
     readonly signUpUsername: Locator;
     readonly signUpPassword: Locator;
     readonly loginSignupBtn: Locator;
+    readonly carouselNextArrow: Locator;
+    readonly carouselPrevArrow: Locator;
 
     constructor(page: Page) {
         this.page = page;
 
-        this.loginUsername = page.locator(`.modal-content`).nth(1);
-        this.loginPassword = page.locator(`input[id="loginpassword"]`);
+        this.loginUsername = page.getByRole('dialog').locator(`input[id="loginusername"]`).first();
+        this.loginPassword = page.locator(`[id="loginpassword"]`);
 
         this.signUpUsername = page.locator(`input[id="sign-username"]`);
         this.signUpPassword = page.locator(`input[id="sign-password"]`);
 
-        this.loginSignupBtn = page.locator(`div.modal-content button.btn.btn-primary`).first();
+        this.loginSignupBtn = page.locator(`.modal-content`).nth(2).locator(`button`).nth(2);
         
 
         this.homeLink = page.locator(`.navbar-collapse [href="index.html"]`);
         this.contactLink = page.locator(`[id="navbarExample"] li`).nth(1).locator(`a.nav-link`);
         this.aboutUsLink = page.locator(`[id="navbarExample"] [data-target="#videoModal"]`);
         this.cartLink = page.locator(`[id="navbarExample"] a[href="cart.html"]`);
-        this.loginLink = page.getByText('Log in');
+        this.loginLink = page.locator(`div[id="navbarExample"] [id="login2"]`);
         this.signUpLink = page.getByText('Sign up');
         this.logoutLink = page.getByText('Log out');
 
-        this.prevBtn = page.getByText('Previous');
-        this.nextBtn = page.getByText('Next');
+        this.carouselPrevArrow = page.locator(`[data-slide="prev"]`).first();
+        this.carouselNextArrow = page.locator(`[data-slide="next"]`).first();
+
+        this.prevBtn = page.getByText('Previous').last();
+        this.nextBtn = page.getByText('Next').last();
 
         this.contactUsForm = page.locator(`.modal-content`).first();
         this.signUpModal = page.locator(`.modal-content`).nth(1);

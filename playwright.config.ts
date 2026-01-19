@@ -43,7 +43,8 @@ export default defineConfig({
 
     {
       name: 'chromium',
-      dependencies: ['setup'],    //Uncomment at first run to ensure auth.json is created
+      //Uncomment at first run to ensure auth.json is created and stored.
+      // dependencies: ['setup'],    
       use: { ...devices['Desktop Chrome'],
         storageState: './utilFiles/helpers/auth.json'
        },
