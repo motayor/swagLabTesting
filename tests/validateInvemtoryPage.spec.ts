@@ -1,9 +1,9 @@
 import test, { expect } from "@playwright/test";
-import { waitFor } from "../utilFiles/fixtures/waitFor";
+import { waitFor } from "../utilFiles/helpers/waitFor";
 import PageLocators from "../utilFiles/Locators/pageLocators";
 import InventoryPageLocators from "../utilFiles/Locators/inventoryPageLocators";
 import { log } from "node:console";
-
+import { chooseCategory } from "../utilFiles/functionClasses/categoriesPicker.ts";
 
 test(`Peruse the product page`, {tag: ['@inventory', '@selection']}, async ({ page }) => {
     await page.goto('');
@@ -71,6 +71,39 @@ test(`Peruse the product page`, {tag: ['@inventory', '@selection']}, async ({ pa
         log(`Products on Page 1: ${prodCountPage1}`);
     })
 
-    await test.step(`Swing carousels at the top`, async() => {
+    await test.step(`verify the Phones category`, async() => {
+        await chooseCategory(page, 'phones');
+        expect(invLoc.productCard).toHaveCount(7);
+
+        for (let i = 0; i < 7; i++) {
+            const prodTitle = invLoc.productTitle(i);
+            expect(prodTitle).toBeVisible();
+            log(`Phone ${i + 1} Title: ${await prodTitle.innerText()}`);
+            waitFor(0.5);
+        }
     })
+
+    await test.step(`verify the Laptops category`, async() => {
+        await chooseCategory(page, 'laptops');
+        expect(invLoc.productCard).toHaveCount(6);
+
+        for (let i = 0; i < 6; i++) {
+            const prodTitle = invLoc.productTitle(i);   
+            expect(prodTitle).toBeVisible();
+            log(`Laptop ${i + 1} Title: ${await prodTitle.innerText()}`);
+            waitFor(0.5);
+        }
+    })
+
+    await test.step(`verify the Monitors category`, async() => {
+        await chooseCategory(page, 'monitors');
+        expect(invLoc.productCard).toHaveCount(2);
+
+        for (let i = 0; i < 2; i++) {
+            const prodTitle = invLoc.productTitle(i);
+            expect(prodTitle).toBeVisible();
+            log(`Monitor ${i + 1} Title: ${await prodTitle.innerText()}`);
+            waitFor(0.5);
+        }
+    }) 
 }); 

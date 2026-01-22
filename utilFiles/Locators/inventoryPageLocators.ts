@@ -26,6 +26,7 @@ class InventoryPageLocators {
         this.productCard = page.locator(`[id="tbodyid"] div.col-lg-4`); //.nth() to specify index.
     }
 
+    //Getters for product details within each product card.
     productTitle(index: number): Locator {
         return this.productCard.nth(index).locator(`div div`).first().locator(`h4.card-title`);
     }
@@ -37,6 +38,8 @@ class InventoryPageLocators {
     productDescription(index: number): Locator {
         return this.productCard.nth(index).locator(`div div`).first().locator(`p.card-text`);
     }
+
+    
 
 }
 
