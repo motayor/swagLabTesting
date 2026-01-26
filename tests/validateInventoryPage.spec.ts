@@ -1,9 +1,9 @@
 import test, { expect } from "@playwright/test";
-import { waitFor } from "../utilFiles/helpers/waitFor";
-import PageLocators from "../utilFiles/Locators/pageLocators";
-import InventoryPageLocators from "../utilFiles/Locators/inventoryPageLocators";
+import PageLocators from "../utilFiles/Locators/pageLocators.ts";
+import InventoryPageLocators from "../utilFiles/Locators/inventoryPageLocators.ts";
 import { log } from "node:console";
 import { chooseCategory } from "../utilFiles/functionClasses/categoriesPicker.ts";
+import { waitFor } from "../utilFiles/helpers/waitFor.ts";
 
 test(`Peruse the product page`, {tag: ['@inventory', '@selection']}, async ({ page }) => {
     await page.goto('');
