@@ -28,15 +28,15 @@ class InventoryPageLocators {
 
     //Getters for product details within each product card.
     productTitle(index: number): Locator {
-        return this.productCard.nth(index).locator(`div div`).first().locator(`h4.card-title`);
+        return this.productCard.nth(index).locator(`h4 a`);
     }
 
     productPrice(index: number): Locator {
-        return this.productCard.nth(index).locator(`div div`).first().locator(`h5`);
+        return this.productCard.nth(index).locator(`h5`);
     }
 
     productDescription(index: number): Locator {
-        return this.productCard.nth(index).locator(`div div`).first().locator(`p.card-text`);
+        return this.productCard.nth(index).locator(`p.card-text`);
     }
 
     
