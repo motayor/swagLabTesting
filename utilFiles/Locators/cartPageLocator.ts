@@ -15,7 +15,7 @@ class CartPageLocators {
 
         this.orderRow = page.locator(`[id="tbodyid"] tr`); //.nth() to specify index.
         this.priceTotal = page.locator(`div.panel`).first().locator(`h3`);
-        this.placeOrderBtn = page.getByText('Place Order');
+        this.placeOrderBtn = page.locator(`div.col-lg-1`).first().locator(`button.btn`);
 
         //Purchase Form locators
         this.orderForm = page.locator(`div[id="orderModal"]`).first();
@@ -44,7 +44,7 @@ class CartPageLocators {
 
     //Order form field locators
     formPriceTotal() {
-        return this.orderForm.locator(`label.form-control-label`);
+        return this.orderForm.locator(`label[id="totalm"]`).first();
     }
 
     formNameInput() {

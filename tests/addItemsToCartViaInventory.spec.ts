@@ -130,17 +130,60 @@ test(`Add items to Shopping Cart via inveotory page`, {tag: ['@inventory', '@sel
         }
     });    
 
+    let postDeleteTotalPrice: string;
     await test.step(`Delete items from cart and validate.`, async () => {
-        
+        await cartLoc.orderDeleteBtn(2).click();
+        await waitFor(2);
+
+        let orderCount = await cartLoc.getOrderCount();
+        expect(orderCount).toBe(2);
+
+        postDeleteTotalPrice = await cartLoc.priceTotal.innerText();
+
+        expect(Number(postDeleteTotalPrice)).toBe(finalPrice - Number(targetPrice2));
+        await waitFor(2);
     });
 
+    const name = 'Leo Messi'
+    const cc = '1234-45678-1234-4567';
+    await test.step(`Complete order and validate shipping form`, async () => {
+        await cartLoc.placeOrderBtn.click();
+        await waitFor(2);
+        expect(cartLoc.orderForm, `Shipping Order form is not displayed.`).toBeVisible();
 
-    //Next, sumbit order and validate the order confirmation page.
+        const shipFormPrice = await cartLoc.formPriceTotal().innerText();
+        log(`Price in shipping form: ${shipFormPrice}`);
+        expect(shipFormPrice).toBe(postDeleteTotalPrice);
 
+        //Fill out the form and submit order.
+        await cartLoc.formNameInput().fill(name);
+        await cartLoc.formCountryInput().fill('USA');
+        await cartLoc.formCityInput().fill('New York');
+        await cartLoc.formCreditCardInput().fill(cc);
+        await cartLoc.formMonthInput().fill('June');
+        await cartLoc.formYearInput().fill('2024');
 
+        await cartLoc.formPurchaseBtn().click();
+        await waitFor(0.5);
+    })
 
+    await test.step(`Validate order confirmation page`, async () => {
+        expect(cartLoc.acknowlegementForm, `Order confirmation form is not displayed.`).toBeVisible();
 
-    
+        const confTitle = await cartLoc.acknowlegementTitle().innerText();
+        expect(confTitle).toBe('Thank you for your purchase!');
+
+        const orderConfText = await cartLoc.acknowlegementMessage().innerText();
+        expect(orderConfText).toContain(name);
+        expect(orderConfText).toContain(cc);
+        expect(orderConfText).toContain(`${postDeleteTotalPrice}USD`);
+
+        await cartLoc.acknowlegementOkBtn().click();
+        await waitFor(2);
+
+        expect(cartLoc.acknowlegementForm).not.toBeVisible();
+        expect(page.url()).toBe(`https://www.demoblaze.com/index.html`);  //Back to home page after order completion.   
+    })
 
     
 
